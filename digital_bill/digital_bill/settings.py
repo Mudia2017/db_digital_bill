@@ -163,38 +163,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'digital_billing_app.CustomUser'
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# # EMAIL_FROM = 'db_digital_bill'
-# EMAIL_HOST_USER = 'example@gmail.com'
-# EMAIL_HOST_PASSWORD = '****'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-
-
-# EMAIL_HOST = 'smpt.zoho.com'
-# EMAIL_HOST_USER = 'example@gmail.com'
-# EMAIL_HOST_PASSWORD = '****'
-# EMAIL_PORT = '587'
-# EMAIL_USE_TLS = True
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-
-# EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.sparkpostmail.com'
-# EMAIL_PORT = 2525
-# EMAIL_HOST_USER = 'SMTP_Injection'
-# EMAIL_HOST_PASSWORD = '******'
-# EMAIL_USE_TLS = True
-
-
-# EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-# EMAIL_HOST_USER = 'example'
-# EMAIL_HOST_PASSWORD = '****'
-# EMAIL_PORT = '2525'
-
-# PASSWORD_RESET_TIMEOUT = 14400
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # PAYSTACK CONFIG SETTINGS
