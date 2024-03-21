@@ -10,6 +10,7 @@ import pyotp
 from datetime import datetime, timedelta
 from digital_billing_app.models import CustomUser, DataSubscription, TransactionLog, AccountHistory
 import math
+from decouple import config
 
 
 # FUNCTION USED TO SEND OTP CODE TO USERS
@@ -297,7 +298,7 @@ def convertReferralToJsonRecord(refs):
         referredCusRec = CustomUser.objects.get(id = ref.referred_cus)
         record = {
             'id': ref.id,
-            'profileImg': 'http://192.168.43.50:8000'+referredCusRec.imageURL,
+            'profileImg': config('URL_ENDPOINT')+referredCusRec.imageURL,
             'referredCusName': referredCusRec.name,
             'referred_cus_initial_deposit': ref.referred_cus_initial_deposit,
             'is_payment_verified': ref.is_payment_verified,

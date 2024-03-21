@@ -18,6 +18,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
 from digital_billing_app.decorators import unauthenticated_user, allowed_user
 from django.http import HttpRequest
+from decouple import config
 
 
 @api_view(['POST'])
@@ -352,7 +353,8 @@ def api_deactivateAccount(request):
                 # user.is_deactivateAcct = True
                 # user.save()
                 data['isSuccess'] = True
-        
+            else:
+                data['errorMsg'] = 'Incorrect password!'
     except Exception as e:
         data['errorMsg'] = e.args
     
@@ -423,7 +425,7 @@ def api_set_updateAcct(request):
                         acctProfile.is_balance_visible = True
                     acctProfile.save()
                     data = {
-                        'image': 'http://192.168.43.50:8000'+acctProfile.imageURL,
+                        'image': config('URL_ENDPOINT')+acctProfile.imageURL,
                         'isBalVisible': acctProfile.is_balance_visible,
                         'name': acctProfile.name,
                         'mobile': acctProfile.mobile_no,
@@ -438,7 +440,7 @@ def api_set_updateAcct(request):
                     acctProfile.mobile_no = request.data.get('mobile').replace(" ", "")
                     acctProfile.save()
                     data = {
-                        'image': 'http://192.168.43.50:8000'+acctProfile.imageURL,
+                        'image': config('URL_ENDPOINT')+acctProfile.imageURL,
                         'isBalVisible': acctProfile.is_balance_visible,
                         'name': acctProfile.name,
                         'mobile': acctProfile.mobile_no,
@@ -452,7 +454,7 @@ def api_set_updateAcct(request):
                     acctProfile.is_active = request.data.get('is_activeAcct')
                     acctProfile.save()
                     data = {
-                        'image': 'http://192.168.43.50:8000'+acctProfile.imageURL,
+                        'image': config('URL_ENDPOINT')+acctProfile.imageURL,
                         'isBalVisible': acctProfile.is_balance_visible,
                         'name': acctProfile.name,
                         'mobile': acctProfile.mobile_no,
@@ -482,7 +484,7 @@ def api_set_updateAcct(request):
                         acctProfile.is_lock_inactive_mode = True
                     acctProfile.save()
                     data = {
-                        'image': 'http://192.168.43.50:8000'+acctProfile.imageURL,
+                        'image': config('URL_ENDPOINT')+acctProfile.imageURL,
                         'isBalVisible': acctProfile.is_balance_visible,
                         'name': acctProfile.name,
                         'mobile': acctProfile.mobile_no,
@@ -493,7 +495,7 @@ def api_set_updateAcct(request):
         else:
             logout(request)
     except Exception as e:
-        pass
+        data['errorMsg'] = e.args
     return JsonResponse(data, safe=False)
 
 
@@ -533,7 +535,7 @@ def api_getProfileInfo(request):
             acctProfile = CustomUser.objects.get(id=request.user.id)
             
             data['userProfile'] = {
-                'image': 'http://192.168.43.50:8000'+acctProfile.imageURL,
+                'image': config('URL_ENDPOINT')+acctProfile.imageURL,
                 'isBalVisible': acctProfile.is_balance_visible,
                 'name': acctProfile.name,
                 'is_activeAcct': acctProfile.is_active,
@@ -591,7 +593,7 @@ def api_acctProfilePix(request):
     data['errorMsg'] = ''
     try:
         user = CustomUser.objects.get(email = request.data['email'].strip())
-        data = {'image':'http://192.168.43.50:8000'+user.imageURL,} 
+        data = {'image':config('URL_ENDPOINT')+user.imageURL,} 
         data['isSuccess'] = True
     except Exception as e:
         data['errorMsg'] = "Kindly click on the 'Log in' to use your email and password."
