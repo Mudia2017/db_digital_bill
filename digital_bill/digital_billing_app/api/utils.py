@@ -15,17 +15,15 @@ from decouple import config
 
 # FUNCTION USED TO SEND OTP CODE TO USERS
 def get_otp(request):
-    totp = pyotp.TOTP(pyotp.random_base32(), interval=120, digits=5)
+    otpRecord = {}
+    totp = pyotp.TOTP(pyotp.random_base32(), interval=60, digits=5)
     otp = totp.now()
-    # LET'S STORE THE KEY IN THE USER SESSION
-    request.session['otp_secret_key'] = totp.secret
-    # ADD 4 MINS TO THE CURRENT TIME AND STORE IN USER SESSION
-    valid_date = datetime.now() + timedelta(minutes=2)
-    request.session['otp_valid_date'] = str(valid_date)
-    request.session['otp_code'] = otp
+   
+    # ADD 1 MINS TO THE CURRENT TIME
+    valid_date = datetime.now() + timedelta(minutes=1)
 
-    # send_email_to_client(request.data['name'], request.data['email'], otp)
-    return otp
+    otpRecord = {'otp': otp, 'otp_secret_key': totp.secret, 'otp_valid_date': str(valid_date)}
+    return otpRecord
 
 
 # FUNCTION TO SEND EMAIL

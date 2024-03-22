@@ -69,9 +69,9 @@ def api_registration(request):
                     )   
                     data['refCreated'] = refCreated.id
                 otp_code = get_otp(request)
-                data['otp_secret_key'] = request.session._session['otp_secret_key']
-                data['otp_valid_date'] = request.session._session['otp_valid_date']
-                data['otp_code'] = otp_code
+                data['otp_secret_key'] = otp_code['otp_secret_key']
+                data['otp_valid_date'] = otp_code['otp_valid_date']
+                data['otp_code'] = otp_code['otp']
                 data['isSuccess'] = True
                 print(data['otp_secret_key'])
             else:
@@ -94,33 +94,15 @@ def api_re_generate_otp(request):
     data['otp_code'] = ''
     try:
         otp_code = get_otp(request)
-        data['otp_secret_key'] = request.session._session['otp_secret_key']
-        data['otp_valid_date'] = request.session._session['otp_valid_date']
-        data['otp_code'] = otp_code
+        data['otp_secret_key'] = otp_code['otp_secret_key']
+        data['otp_valid_date'] = otp_code['otp_valid_date']
+        data['otp_code'] = otp_code['otp']
         data['isSuccess'] = True
     except Exception as e:
         data['errorMsg'] = e.args
 
     return JsonResponse(data)
 
-
-# user = AccountHistory.objects.get(id = 66)
-# user.delete()
-# user.credit = 3000
-# user.closing_bal = 10900
-# for us in user:
-    # us.delete()
-# user.unique_referral_code = 'DBill_Maxwell0291'
-# user.delete()
-# for us in user:
-    
-#     print(us.last_login)
-#     break
-# img = user.imageURL[:-4]
-# print(img)
-# user.is_deactivateAcct = False
-# user.image = ''
-# user.save()
 
 # OTP CONFIRM CODE 
 # @unauthenticated_user
@@ -137,7 +119,7 @@ def api_confirmOTPCode(request):
             # user.security_pin = None
             # user.save()
             
-            otp = int(request.data['otp'])
+            otp = str(request.data['otp'])
             otp_secret_key = request.data['otp_secret_key']
             otp_valid_date = request.data['otp_valid_date']
             print(otp)
@@ -148,9 +130,10 @@ def api_confirmOTPCode(request):
                     
                     if valid_until > datetime.now():
                         
-                        totp = pyotp.TOTP(otp_secret_key, interval=120, digits=5)
+                        totp = pyotp.TOTP(otp_secret_key, interval=60, digits=5)
                         
                         if totp.verify(otp):
+                            
                             # UPDATE THE DATABASE TABLE THAT ACCT HAVE BEEN VIERIFIED THROUGH OTP
                             # DELETE THE OTP RECORD WE SAVED IN THE REQUEST SESSION
                             # REDIRECT TO THE PROFILE PAGE...
@@ -162,7 +145,7 @@ def api_confirmOTPCode(request):
                         else:
                             data['errorMsg'] = 'Wrong code!'
                     else:
-                        data['errorMsg'] = 'Your verification code have expired. Kindly generate another to expire in 2 minutes'
+                        data['errorMsg'] = 'Your verification code have expired. Kindly generate another to expire in 1 minutes'
             else:
                 data['errorMsg'] = 'Kindly re-generate OTP code'
         else:
